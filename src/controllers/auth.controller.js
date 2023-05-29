@@ -83,12 +83,13 @@ export const AuthController = {
   //Region add new user
   createUser: async (req, res) => {
     try {
-      const user = await User.findOne({ phone: req.body.phone });
-      if (user) {
+      const emailExists = await User.exists({ email: req.body.email });
+      if (emailExists) {
         return res
           .status(400)
-          .json({ success: false, message: "Phone already exists" });
+          .json({ success: false, message: "Email already exists" });
       }
+
       const isValidPassword = validator.isLength(req.body.password, 8, 30);
       if (!isValidPassword) {
         return res.status(400).json({
@@ -96,26 +97,16 @@ export const AuthController = {
           message: "Password must be 8-30 characters",
         });
       }
-      if (!(req.body.password === req.body.passwordConfirm)) {
-        return res
-          .status(400)
-          .json({ success: false, message: "Password is not match!" });
-      }
+
+      const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
       const data = new User({
-        phone: req.body.phone,
-        email: req.body.email,
-        password: bcrypt.hashSync(req.body.password, 10),
-        passwordConfirm: bcrypt.hashSync(req.body.password, 10),
         name: req.body.name,
-        work: req.body.work,
-        birthday: req.body.birthday,
-        about: req.body.about,
-        bookmark: req.body.bookmark,
-        language: req.body.language,
+        email: req.body.email,
+        password: hashedPassword,
+        userType: req.body.userType,
       });
-      // const dataToSave = await data.save();
-      // res.status(200).json(dataToSave);
+
       await User.create(data);
       return res.status(200).json({ status: true, message: "User created" });
     } catch (error) {
@@ -124,13 +115,13 @@ export const AuthController = {
   },
   //End region
   //Region login
-  login: async (req, res) => {
+  loginUser: async (req, res) => {
     try {
-      const user = await User.findOne({ phone: req.body.phone });
+      const user = await User.findOne({ email: req.body.email });
       if (!user) {
         return res
           .status(400)
-          .json({ success: false, message: "Username does not exist" });
+          .json({ success: false, message: "Email does not exist" });
       }
       const isValidPassword = await bcrypt.compare(
         req.body.password,
@@ -143,7 +134,7 @@ export const AuthController = {
       }
       return res
         .status(200)
-        .json({ success: true, message: "Login success", userid: user._id });
+        .json({ success: true, message: "Login successfully" });
       // const token = jwt.sign(
       //   { id: user._id, phone: user.phone },
       //   "secret",

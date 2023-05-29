@@ -6,8 +6,6 @@ import mongoose from "mongoose";
 import cors from "cors";
 import http from "http";
 
-// import admin from "mongodb-admin";
-
 //#region initialize server
 dotenv.config();
 
@@ -16,14 +14,21 @@ const server = http.createServer(app);
 const PORT = process.env.PORT || 3000;
 //#end region
 
-// app.use(bodyParser.json());
-
 //#region setup middleware
 // app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
 app.use(express.json({ limit: "50mb", extended: true }));
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 //#end region
+
+//#region import router
+import authRouter from "./routers/auth.router.js";
+//#end region
+
+//#region setup router
+app.use("/api/auth", authRouter);
+//#end region
+
 //#region connect to database
 mongoose.set("strictQuery", false); // Add this line to address the deprecation warning
 
