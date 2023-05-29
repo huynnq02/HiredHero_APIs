@@ -132,9 +132,13 @@ export const AuthController = {
           .status(400)
           .json({ success: false, message: "Password is incorrect" });
       }
-      return res
-        .status(200)
-        .json({ success: true, message: "Login successfully" });
+      const { password, ...userData } = user.toObject();
+
+      return res.status(200).json({
+        success: true,
+        message: "Login successfully",
+        userData: user,
+      });
       // const token = jwt.sign(
       //   { id: user._id, phone: user.phone },
       //   "secret",
