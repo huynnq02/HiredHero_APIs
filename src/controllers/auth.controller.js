@@ -137,7 +137,7 @@ export const AuthController = {
       return res.status(200).json({
         success: true,
         message: "Login successfully",
-        userData: user,
+        data: user,
       });
       // const token = jwt.sign(
       //   { id: user._id, phone: user.phone },
