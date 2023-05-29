@@ -23,10 +23,18 @@ app.use(cors());
 
 //#region import router
 import authRouter from "./routers/auth.router.js";
+import companyRouter from "./routers/company.router.js";
+import jobRouter from "./routers/job.router.js";
+import bookmarkRouter from "./routers/bookmark.router.js";
+import applyRouter from "./routers/apply.router.js";
 //#end region
 
 //#region setup router
 app.use("/api/auth", authRouter);
+app.use("/api/company", companyRouter);
+app.use("/api/job", jobRouter);
+app.use("/api/bookmark", bookmarkRouter);
+app.use("/api/apply", applyRouter);
 //#end region
 
 //#region connect to database
