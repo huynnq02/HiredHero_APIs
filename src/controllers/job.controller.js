@@ -3,7 +3,7 @@ import Job from "../models/job.js";
 export const JobController = {
   getAllJobs: async (req, res) => {
     try {
-      const jobs = await Job.find();
+      const jobs = await Job.find().populate("company");
       res.status(200).json({
         success: true,
         message: jobs,
