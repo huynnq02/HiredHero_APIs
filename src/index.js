@@ -48,8 +48,8 @@ mongoose
   .then(() => {
     console.log("Connected to MongoDB!!!");
   })
-  .catch(() => {
-    console.log("Error connecting to MongoDB");
+  .catch((e) => {
+    console.log(e);
   });
 //#end region
 
