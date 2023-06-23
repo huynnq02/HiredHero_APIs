@@ -5,6 +5,8 @@ import { ApplyController } from "../controllers/apply.controller.js";
 
 router.get("/getAllApplies", ApplyController.getAllApplies);
 
+router.get("/getAllAppliesFromUser", ApplyController.getAllAppliesFromUser);
+
 router.get("/getApply/:id", ApplyController.getApply);
 
 router.post("/createApply", ApplyController.createApply);
