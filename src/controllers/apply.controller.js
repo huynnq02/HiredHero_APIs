@@ -33,7 +33,7 @@ export const ApplyController = {
     try {
       const apply = await Apply.findById(req.params.id).populate([
         "userApply",
-        "jobseeker",
+        "employer",
       ]);
       res.status(200).json({
         success: true,
@@ -51,7 +51,7 @@ export const ApplyController = {
     try {
       const data = new Apply({
         userApply: req.body.userApply,
-        jobseeker: req.body.jobseeker,
+        employer: req.body.employer,
         file: req.body.file,
       });
 

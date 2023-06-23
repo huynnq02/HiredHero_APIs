@@ -6,7 +6,7 @@ const applySchema = new mongoose.Schema({
     ref: "users",
     required: true,
   },
-  jobseeker: {
+  employer: {
     type: mongoose.Types.ObjectId,
     ref: "users",
     required: true,
