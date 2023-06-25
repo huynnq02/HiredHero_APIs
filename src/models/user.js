@@ -32,7 +32,7 @@ const userSchema = new mongoose.Schema({
       return this.userType === "jobseeker";
     },
   },
-  experience: [
+  experiences: [
     {
       title: String,
       years: Number,

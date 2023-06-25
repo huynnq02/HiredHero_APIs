@@ -25,12 +25,10 @@ export const AuthController = {
       console.log(req.params.id);
       const user = await User.findById(req.params.id).populate([
         "languages",
-        "educations",
         "jobs",
-        "works",
         {
           path: "bookmarks",
-          populate: { path: "postId", populate: { path: "author" } },
+          // populate: { path: "postId", populate: { path: "author" } },
         },
         "resumes",
         "skills",
