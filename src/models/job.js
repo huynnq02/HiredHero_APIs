@@ -13,6 +13,7 @@ const jobSchema = new mongoose.Schema({
   location: String,
   type: String,
   description: String,
+  expired: String,
 });
 
 const Job = mongoose.model("jobs", jobSchema);

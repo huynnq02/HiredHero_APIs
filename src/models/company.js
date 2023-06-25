@@ -5,6 +5,8 @@ const companySchema = new mongoose.Schema({
     required: true,
   },
   location: String,
+  companySize: String,
+  description: String,
   establishedYear: Number,
   job: [
     {
