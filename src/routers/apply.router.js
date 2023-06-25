@@ -5,7 +5,7 @@ import { ApplyController } from "../controllers/apply.controller.js";
 
 router.get("/getAllApplies", ApplyController.getAllApplies);
 
-router.get("/getAllAppliesFromUser", ApplyController.getAllAppliesFromUser);
+router.get("/getAllAppliesFromUser/:id", ApplyController.getAllAppliesFromUser);
 
 router.get("/getApply/:id", ApplyController.getApply);
 
