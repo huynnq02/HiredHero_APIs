@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cors from "cors";
 import http from "http";
+import multer from "multer";
 
 //#region initialize server
 dotenv.config();
@@ -13,6 +14,7 @@ const app = express();
 const server = http.createServer(app);
 const PORT = process.env.PORT || 3000;
 //#end region
+const upload = multer({ dest: 'uploads/' });
 
 //#region setup middleware
 // app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
@@ -27,6 +29,7 @@ import companyRouter from "./routers/company.router.js";
 import jobRouter from "./routers/job.router.js";
 import bookmarkRouter from "./routers/bookmark.router.js";
 import applyRouter from "./routers/apply.router.js";
+import fileRouter from "./routers/file.router.js";
 //#end region
 
 //#region setup router
@@ -35,6 +38,7 @@ app.use("/api/company", companyRouter);
 app.use("/api/job", jobRouter);
 app.use("/api/bookmark", bookmarkRouter);
 app.use("/api/apply", applyRouter);
+app.use("/api/file",upload.any(),fileRouter);
 //#end region
 
 //#region connect to database
