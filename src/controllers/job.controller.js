@@ -1,9 +1,9 @@
 import Job from "../models/job.js";
-import moment from 'moment'
+import moment from "moment";
 export const JobController = {
   getAllJobs: async (req, res) => {
     try {
-      const jobs = await Job.find().populate("company");
+      const jobs = await Job.find().populate(["company"]);
       res.status(200).json({
         success: true,
         message: jobs,
@@ -18,9 +18,11 @@ export const JobController = {
 
   getAllJobsNonExpired: async (req, res) => {
     try {
-      const currentDate = moment().format('YYYY-MM-DD');
+      const currentDate = moment().format("YYYY-MM-DD");
 
-      const jobs = await Job.find({expired: {$gt: currentDate}}).populate("company");
+      const jobs = await Job.find({ expired: { $gt: currentDate } }).populate(
+        "company"
+      );
       res.status(200).json({
         success: true,
         message: jobs,
@@ -94,14 +96,14 @@ export const JobController = {
     }
   },
 
-  getAllJobsFromCompany: async (req,res) => {
-    try{
-      const jobs = await Job.find({company : req.params.id});
+  getAllJobsFromCompany: async (req, res) => {
+    try {
+      const jobs = await Job.find({ company: req.params.id });
       res.status(200).json({
         success: true,
         message: jobs,
       });
-    } catch (error){
+    } catch (error) {
       res.status(500).json({
         success: false,
         message: "Error when getting all jobs",
@@ -109,16 +111,19 @@ export const JobController = {
     }
   },
 
-  getAllJobsFromCompanyNonExpired: async (req,res) => {
-    try{
-      const currentDate = moment().format('YYYY-MM-DD');
+  getAllJobsFromCompanyNonExpired: async (req, res) => {
+    try {
+      const currentDate = moment().format("YYYY-MM-DD");
 
-      const jobs = await Job.find({company : req.params.id, expired : {$gt: currentDate}});
+      const jobs = await Job.find({
+        company: req.params.id,
+        expired: { $gt: currentDate },
+      });
       res.status(200).json({
         success: true,
         message: jobs,
       });
-    } catch (error){
+    } catch (error) {
       res.status(500).json({
         success: false,
         message: "Error when getting all jobs",
