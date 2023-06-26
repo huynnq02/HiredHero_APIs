@@ -3,7 +3,7 @@ import Apply from "../models/apply.js";
 export const ApplyController = {
   getAllApplies: async (req, res) => {
     try {
-      const applies = await Apply.find();
+      const applies = await Apply.find().populate("job");
       res.status(200).json({
         success: true,
         message: applies,
@@ -15,12 +15,32 @@ export const ApplyController = {
       });
     }
   },
-
+  getAllAppliesFromUser : async (req,res) => {
+    try{
+      const applies = await Apply.find({userApply : req.params.id}).populate({
+        path: 'job',
+        populate: {
+          path: 'company',
+          model: 'companies'
+        }
+      });
+      res.status(200).json({
+        success: true,
+        message: applies,
+      });
+    } catch (error){
+      res.status(500).json({
+        success: false,
+        message: "Error when getting all applies",
+      });
+    }
+  },
   getApply: async (req, res) => {
     try {
       const apply = await Apply.findById(req.params.id).populate([
         "userApply",
         "employer",
+        "job",
       ]);
       res.status(200).json({
         success: true,

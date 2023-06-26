@@ -1,9 +1,26 @@
 import Job from "../models/job.js";
-
+import moment from 'moment'
 export const JobController = {
   getAllJobs: async (req, res) => {
     try {
       const jobs = await Job.find().populate("company");
+      res.status(200).json({
+        success: true,
+        message: jobs,
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: "Error when getting all jobs",
+      });
+    }
+  },
+
+  getAllJobsNonExpired: async (req, res) => {
+    try {
+      const currentDate = moment().format('YYYY-MM-DD');
+
+      const jobs = await Job.find({expired: {$gt: currentDate}}).populate("company");
       res.status(200).json({
         success: true,
         message: jobs,
@@ -73,6 +90,38 @@ export const JobController = {
       res.status(500).json({
         success: false,
         message: "Error when deleting the job",
+      });
+    }
+  },
+
+  getAllJobsFromCompany: async (req,res) => {
+    try{
+      const jobs = await Job.find({company : req.params.id});
+      res.status(200).json({
+        success: true,
+        message: jobs,
+      });
+    } catch (error){
+      res.status(500).json({
+        success: false,
+        message: "Error when getting all jobs",
+      });
+    }
+  },
+
+  getAllJobsFromCompanyNonExpired: async (req,res) => {
+    try{
+      const currentDate = moment().format('YYYY-MM-DD');
+
+      const jobs = await Job.find({company : req.params.id, expired : {$gt: currentDate}});
+      res.status(200).json({
+        success: true,
+        message: jobs,
+      });
+    } catch (error){
+      res.status(500).json({
+        success: false,
+        message: "Error when getting all jobs",
       });
     }
   },
