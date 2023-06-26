@@ -16,6 +16,7 @@ const applySchema = new mongoose.Schema({
     ref: "jobs",
     required: true,
   },
+  createTime: { type: Date, default: Date.now }, // Define createTime as Date type with a default value of the current timestamp
   file: String,
   status: {
     type: String,
@@ -35,13 +36,12 @@ const applySchema = new mongoose.Schema({
       return this.status === "accepted";
     },
   },
-  timeInterview:{
+  timeInterview: {
     type: String,
     required: function () {
       return this.status === "accepted";
     },
-  }
-
+  },
 });
 
 const Apply = mongoose.model("applies", applySchema);

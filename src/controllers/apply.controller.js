@@ -1,10 +1,30 @@
-import { response } from "express";
 import Apply from "../models/apply.js";
-import axios from "axios"
-import FormData from "form-data";
+import mongoose from "mongoose";
+import multer from "multer";
+import { GridFsStorage } from "multer-gridfs-storage";
+import dotenv from "dotenv";
+import User from "../models/user.js";
+import Job from "../models/job.js";
+import { v4 as uuidv4 } from "uuid";
 
-const PORT = 5000;
-const baseUrl = `http://localhost:${PORT}`
+dotenv.config();
+// create a storage engine
+const storage = new GridFsStorage({
+  url: process.env.MONGO_URL,
+  options: { useNewUrlParser: true, useUnifiedTopology: true },
+
+  file: (req, file) => {
+    const uniqueFilename = `${uuidv4()}-${file.originalname}`;
+
+    return {
+      bucketName: "uploads",
+      filename: uniqueFilename,
+    };
+  },
+});
+
+// create a multer middleware instance
+const upload = multer({ storage });
 
 export const ApplyController = {
   getAllApplies: async (req, res) => {
@@ -21,20 +41,20 @@ export const ApplyController = {
       });
     }
   },
-  getAllAppliesFromUser : async (req,res) => {
-    try{
-      const applies = await Apply.find({userApply : req.params.id}).populate({
-        path: 'job',
+  getAllAppliesFromUser: async (req, res) => {
+    try {
+      const applies = await Apply.find({ userApply: req.params.id }).populate({
+        path: "job",
         populate: {
-          path: 'company',
-          model: 'companies'
-        }
+          path: "company",
+          model: "companies",
+        },
       });
       res.status(200).json({
         success: true,
         message: applies,
       });
-    } catch (error){
+    } catch (error) {
       res.status(500).json({
         success: false,
         message: "Error when getting all applies",
@@ -62,15 +82,38 @@ export const ApplyController = {
 
   createApply: async (req, res) => {
     try {
-      const data = new Apply({
-        userApply: req.body.userApply,
-        employer: req.body.employer,
-        file: req.body.file,
-        job:req.body.job,
+      const userApply = User.find({ id: req.body.userApply });
+      const employer = User.find({ id: req.body.employer });
+      const job = Job.find({ id: req.body.job });
+      if (!userApply)
+        return res
+          .status(404)
+          .json({ success: false, message: "User apply not found" });
+      if (!employer)
+        return res
+          .status(404)
+          .json({ success: false, message: "Employer apply not found" });
+      if (!job)
+        return res
+          .status(404)
+          .json({ success: false, message: "Job  not found" });
+      upload.single("file")(req, res, async (err) => {
+        if (err) {
+          return res.status(400).json({ success: false, message: err.message });
+        }
+        const uniqueFilename = `${uuidv4()}-${req.file.originalname}`;
+
+        const data = new Apply({
+          userApply: req.body.userApply,
+          employer: req.body.employer,
+          job: req.body.job,
+          file: uniqueFilename,
+        });
+        await Apply.create(data);
+        return res
+          .status(200)
+          .json({ success: true, message: "Apply created" });
       });
-      
-      await Apply.create(data);
-      return res.status(200).json({ success: true, message: "Apply created" });
     } catch (error) {
       res.status(400).json({ success: false, message: error.message });
     }
