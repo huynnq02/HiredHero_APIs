@@ -1,4 +1,10 @@
+import { response } from "express";
 import Apply from "../models/apply.js";
+import axios from "axios"
+import FormData from "form-data";
+
+const PORT = 5000;
+const baseUrl = `http://localhost:${PORT}`
 
 export const ApplyController = {
   getAllApplies: async (req, res) => {
@@ -60,8 +66,9 @@ export const ApplyController = {
         userApply: req.body.userApply,
         employer: req.body.employer,
         file: req.body.file,
+        job:req.body.job,
       });
-
+      
       await Apply.create(data);
       return res.status(200).json({ success: true, message: "Apply created" });
     } catch (error) {
