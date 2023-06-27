@@ -29,6 +29,7 @@ import companyRouter from "./routers/company.router.js";
 import jobRouter from "./routers/job.router.js";
 import bookmarkRouter from "./routers/bookmark.router.js";
 import applyRouter from "./routers/apply.router.js";
+import postRouter from "./routers/post.router.js";
 //#end region
 
 //#region setup router
@@ -37,6 +38,7 @@ app.use("/api/company", companyRouter);
 app.use("/api/job", jobRouter);
 app.use("/api/bookmark", bookmarkRouter);
 app.use("/api/apply", applyRouter);
+app.use("/api/post", postRouter);
 //#end region
 
 //#region connect to database
