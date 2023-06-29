@@ -61,6 +61,37 @@ export const ApplyController = {
       });
     }
   },
+
+  getAllAppliesFromHR: async (req, res) => {
+    try {
+      const applies = await Apply.find({ employer: req.params.id }).populate(["userApply","job"]);
+      res.status(200).json({
+        success: true,
+        message: applies,
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: "Error when getting all applies",
+      });
+    }
+  },
+
+  getFilterAppliesFromHR: async (req, res) => {
+    try {
+      const applies = await Apply.find({ employer: req.params.id, status : req.params.status}).populate(["userApply","job"]);
+      res.status(200).json({
+        success: true,
+        message: applies,
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: "Error when getting all applies",
+      });
+    }
+  },
+
   getApply: async (req, res) => {
     try {
       const apply = await Apply.findById(req.params.id).populate([
@@ -129,15 +160,22 @@ export const ApplyController = {
         });
       }
       apply.status = req.body.status;
+      if(apply.status === "accepted"){
+        apply.message = req.body.message;
+        apply.timeInterview = req.body.timeInterview;
+        apply.placeInterview = req.body.placeInterview;
+      }else if(apply.status === "declined"){
+        apply.message = req.body.message;
+      }
       await apply.save();
       res.status(200).json({
         success: true,
-        message: "Apply status updated",
+        message: apply,
       });
     } catch (error) {
       res.status(500).json({
         success: false,
-        message: "Error when updating the apply status",
+        message: "Error when updating the apply status"+error,
       });
     }
   },
