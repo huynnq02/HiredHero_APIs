@@ -8,6 +8,10 @@ const postSchema = new mongoose.Schema({
         ref: "jobs",
         required: true,
     },
+    author: {
+        type: mongoose.Types.ObjectId,
+        ref: "users"
+    }
 });
 
 const Post = mongoose.model("posts", postSchema);

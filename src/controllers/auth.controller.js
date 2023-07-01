@@ -97,16 +97,28 @@ export const AuthController = {
       }
 
       const hashedPassword = await bcrypt.hash(req.body.password, 10);
+      if (req.body.userType == "jobseeker") {
+        const data = new User({
+          name: req.body.name,
+          email: req.body.email,
+          password: hashedPassword,
+          userType: req.body.userType,
+        });
 
+        await User.create(data);
+        return res.status(200).json({ status: true, message: "User created" });
+      }
       const data = new User({
         name: req.body.name,
         email: req.body.email,
         password: hashedPassword,
         userType: req.body.userType,
+        phoneNumber: req.body.phoneNumber,
+        industry: req.body.industry,
+        companyName: req.body.companyName,
       });
-
       await User.create(data);
-      return res.status(200).json({ status: true, message: "User created" });
+      return res.status(200).json({ status: true, message: "Employer created" });
     } catch (error) {
       res.status(400).json({ message: error.message });
     }
