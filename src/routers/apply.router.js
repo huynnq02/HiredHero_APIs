@@ -5,6 +5,10 @@ import { ApplyController } from "../controllers/apply.controller.js";
 
 router.get("/getAllApplies", ApplyController.getAllApplies);
 
+router.get("/getAllAppliesFromHR/:id", ApplyController.getAllAppliesFromHR);
+
+router.get("/getFilterAppliesFromHR/:id/:status", ApplyController.getFilterAppliesFromHR);
+
 
 router.get("/getAllAppliesFromUser/:id", ApplyController.getAllAppliesFromUser);
 
